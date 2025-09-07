@@ -1,0 +1,9 @@
+{
+  "name": "finance-tracker",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@fastify/aws-lambda": "^6.1.1",
+    "fastify": "^5.5.0"
+  }
+}
