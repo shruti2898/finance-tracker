@@ -16,16 +16,12 @@ const transactionSchema = {
   }
 };
 
-fastify.get('/api', (_, reply) => {
-    reply.send("Welcome to finance tracker");
-})
-
-fastify.get('/api/transactions', async () =>  { return transactions; });
-
-fastify.post('/api/transactions', { schema: { body: transactionSchema } }, (request, reply) => {
+// Endpoints
+// Create a new transaction
+fastify.post('/transactions', { schema: { body: transactionSchema } }, (request, reply) => {
     const { amount, type, category, description } = request.body;
     const totalTransactions = transactions.length;
-    let txId = totalTransactions == 0 ? 1 : transactions[totalTransactions - 1].id + 1;
+    let txId = totalTransactions == 0 ? 1 : Number(transactions[totalTransactions - 1].id) + 1;
     
     const transaction = {
         id: txId,
@@ -39,7 +35,21 @@ fastify.post('/api/transactions', { schema: { body: transactionSchema } }, (requ
     reply.send(transaction);
 });
 
-fastify.put('/api/transactions/:id', { schema: { body: transactionSchema } }, (request, reply) => {
+// Get all transactions
+fastify.get('/transactions', async () =>  { return transactions; });
+
+// Get a transaction by ID
+fastify.get('/transactions/:id', async (request, reply) => {
+    const txId = request.params.id;
+    const transaction = transactions.find(t => t.id == txId);
+    if(!transaction) {
+        return reply.code(404).send(`Transcation not found for Id : ${txId}`);
+    }
+    return transaction; 
+});
+
+// Update a transaction by ID
+fastify.put('/transactions/:id', { schema: { body: transactionSchema } }, (request, reply) => {
     const txId = request.params.id;
     const index = transactions.findIndex(t => t.id == txId);
     if(index == -1) {
@@ -52,22 +62,42 @@ fastify.put('/api/transactions/:id', { schema: { body: transactionSchema } }, (r
         amount,
         type,
         category,
-        description: description
+        description,
+        date: new Date().toISOString()
     };
 
-    transactions[txId] = transaction;
-    return reply.send(transactions[txId]);
+    transactions[index] = transaction;
+    return reply.send(transactions[index]);
 });
 
-fastify.delete('/api/transactions/:id', async (request, reply) => {
+// Delete a transaction by ID
+fastify.delete('/transactions/:id', async (request, reply) => {
     const txId = request.params.id;
-    const index = transactions.findIndex(t => t.id === txId);
+    const index = transactions.findIndex(t => t.id == txId);
     if(index == -1) {
         return reply.code(404).send(`Transcation not found for Id : ${txId}`);
     }
 
     transactions.splice(index, 1);
     return reply.send(`Deleted successfully`);
+});
+
+// Get summary of transactions by category
+fastify.get('/summary', async () => {
+    const summary = transactions.reduce((acc, transaction) => {
+        if (!acc[transaction.category]) {
+            acc[transaction.category] = { income: 0, expense: 0 };
+        }
+        acc[transaction.category][transaction.type] += transaction.amount;
+        return acc;
+    }, {});
+    return summary;
+});
+
+// Reset all transactions
+fastify.post('/reset', (_, reply) => {
+    transactions.splice(0, transactions.length);
+    return reply.send('All transactions have been reset');
 });
 
 module.exports = fastify;
