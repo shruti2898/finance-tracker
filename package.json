@@ -2,8 +2,20 @@
   "name": "finance-tracker",
   "version": "1.0.0",
   "main": "index.js",
+  "scripts": {
+    "dev": "ts-node src/server.ts",
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "lambda": "node dist/index.js"
+  },
   "dependencies": {
     "@fastify/aws-lambda": "^6.1.1",
     "fastify": "^5.5.0"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.152",
+    "@types/node": "^24.3.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
   }
 }
