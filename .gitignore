@@ -18,3 +18,4 @@ build/
 # Others
 *.zip
 package-lock.json
+lambda-function/
