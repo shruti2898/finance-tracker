@@ -41,7 +41,7 @@ npm install
 
 ## 📬 API Endpoints
 
-### 1️⃣ Create Transaction
+### 1. Create Transaction
 **POST** `/transactions`  
 ```json
 {
@@ -52,14 +52,14 @@ npm install
 }
 ```
 
-### 2️⃣ Get All Transactions
+### 2. Get All Transactions
 **GET** `/transactions`
 
-### 3️⃣ Get Transaction by ID
+### 3. Get Transaction by ID
 **GET** `/transactions/:id`  
 Example: `/transactions/1`
 
-### 4️⃣ Update Transaction
+### 4. Update Transaction
 **PUT** `/transactions/:id`  
 ```json
 {
@@ -70,10 +70,10 @@ Example: `/transactions/1`
 }
 ```
 
-### 5️⃣ Delete Transaction
+### 5. Delete Transaction
 **DELETE** `/transactions/:id`
 
-### 6️⃣ Summary
+### 6. Summary
 **GET** `/summary`  
 Response:
 ```json
@@ -103,7 +103,7 @@ Response:
    ```bash
    npm run build
    ```
-2. Package with production dependencies (use the `build-and-package.sh` script).  
+2. Package with production dependencies (use the `lambda-function.sh` script).  
 3. Upload `function.zip` to AWS Lambda.  
 
 ---
